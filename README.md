@@ -47,7 +47,7 @@ curl -v http://10.0.2.5/?test=/etc/passwd
 {"timestamp":"2026-06-27T09:17:58.310245+0000","event_type":"stats","stats":{"uptime":2256,"capture":{"kernel_packets":34239,"kernel_drops":0,"errors":0},"detect":{"engines":[{"id":0,"rules_loaded":0,"rules_failed":0,"rules_skipped":0}],"alert":0}}}
 ```
 
-### Таблица: события в логах
+#### 3. Таблица: события в логах
 | Система | Тип события | Что попало в логи | Комментарий | Пример команды для проверки |
 | :--- | :--- | :--- | :--- | :--- |
 | **Suricata** | `stats` | Периодические события статистики в `eve.json` (интервал ~8 сек): `uptime`, `kernel_packets`, `rules_loaded`, `alert` | Система корректно захватывает трафик (`kernel_packets` > 0, `kernel_drops` = 0). Отсутствие алертов (`alert: 0`) вызвано тем, что в текущей конфигурации не загружены сигнатурные правила (`rules_loaded: 0`). | `tail -n 10 /var/log/suricata/eve.json | grep '"event_type":"stats"'` |
