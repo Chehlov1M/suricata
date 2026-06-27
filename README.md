@@ -84,3 +84,34 @@ curl -v http://10.0.2.5/?test=/etc/passwd
 Фрагмент лога Fail2Ban:
 
     2026-06-27 11:15:22,123 fail2ban.actions[1234]: NOTICE [sshd] Ban 10.0.2.19
+
+    
+Suricata
+
+Тип события: stats
+
+Что попало в логи:
+
+        Периодические события event_type: "stats" в /var/log/suricata/eve.json (интервал ~8 сек)
+
+        Метрики:
+
+            uptime
+
+            kernel_packets
+
+            rules_loaded
+
+            alert
+
+Ключевые значения:
+
+            alert: 0
+
+            rules_loaded: 0
+
+Комментарий: Suricata корректно захватывает трафик (kernel_packets > 0, kernel_drops = 0), но не генерирует алертов из‑за отсутствия сигнатурных правил. Без правил система видит трафик, но не классифицирует его как атаку.
+
+Пример команды для проверки:
+   
+    tail -n 10 /var/log/suricata/eve.json | grep '"event_type":"stats"'
