@@ -38,9 +38,9 @@
 curl -v http://10.0.2.5/?test=/etc/passwd
 
 * connect to 10.0.2.5 port 80 ... failed: Connection refused
+```
 
 ### Анализ логов Suricata (`eve.json`)
-
 Для подтверждения работоспособности IDS и проверки генерации алертов проанализированы статистические события в `eve.json`:
 
 ```json
