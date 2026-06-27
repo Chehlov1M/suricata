@@ -67,16 +67,17 @@ Fail2Ban
 
 Статус jail sshd:
 Status for the jail: sshd
-|- Filter
-|  |- Currently failed:	1
-|  |- Total failed:	18
-|  `- Journal matches:	_SYSTEMD_UNIT=sshd.service + _COMM=sshd
+- Filter
+  - Currently failed:	1
+  - Total failed:	18
+  `- Journal matches:	_SYSTEMD_UNIT=sshd.service + _COMM=sshd
 `- Actions
-   |- Currently banned:	1
-   |- Total banned:	1
+    - Currently banned:	1
+   - Total banned:	1
    `- Banned IP list:	10.0.2.19
 
 Фрагмент лога Fail2Ban:
+
 2026-06-27 11:15:22,123 fail2ban.actions[1234]: NOTICE [sshd] Ban 10.0.2.19
 
 Система	Тип события	Что попало в логи	Комментарий	Пример команды для проверки
