@@ -84,5 +84,6 @@ Fail2Ban (sshd)
 
 Фрагмент лога Fail2Ban:
 
-           2026-06-27 11:15:22,123 fail2ban.actions[1234]: NOTICE [sshd] Ban 10.0.2.19
+    2026-06-27 11:15:22,123 fail2ban.actions[1234]: NOTICE [sshd] Ban 10.0.2.19
+
 
