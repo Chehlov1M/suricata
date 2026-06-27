@@ -86,10 +86,3 @@ Fail2Ban (sshd)
 
            2026-06-27 11:15:22,123 fail2ban.actions[1234]: NOTICE [sshd] Ban 10.0.2.19
 
-Система	Тип события	Что попало в логи	Комментарий	Пример команды для проверки
-Fail2Ban (sshd)	failed login → Ban	- В auth.log: строки Failed password for ... from 10.0.2.19
-- Статус: Currently failed: 1, Total failed: 18
-- Результат: Currently banned: 1, Banned IP list: 10.0.2.19	Fail2Ban накопил неудачные попытки аутентификации и при превышении порога maxretry (по умолчанию 5) заблокировал IP атакующей машины. Это демонстрирует работу политики «наблюдай → накапливай → блокируй».	bash<br>sudo fail2ban-client status sshd<br>grep "Failed password" /var/log/auth.log | tail -n 15<br>
-Suricata	stats	- Периодические события event_type: "stats" в eve.json (интервал ~8 сек)
-- Метрики: uptime, kernel_packets, rules_loaded, alert
-- alert: 0, rules_loaded: 0	Suricata корректно захватывает трафик (kernel_packets > 0, kernel_drops = 0), но не генерирует алертов, потому что в конфигурации нет сигнатурных правил. Для стенда это ожидаемое поведение: система видит трафик, но не детектирует атаку без правил.	bash<br>tail -n 10 /var/log/suricata/eve.json | grep '"event_type":"stats"'<br>
