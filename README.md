@@ -68,19 +68,19 @@ Fail2Ban (sshd)
 
     Что попало в логи:
 
-        В /var/log/auth.log: строки Failed password for ... from 10.0.2.19
+    В /var/log/auth.log: строки Failed password for ... from 10.0.2.19
 
-        Статус фильтра:
+    Статус фильтра:
 
-            Currently failed: 1
+    Currently failed: 1
 
-            Total failed: 18
+    Total failed: 18
 
-        Результат действий:
+    Результат действий:
 
-            Currently banned: 1
+    Currently banned: 1
 
-            Banned IP list: 10.0.2.19
+    Banned IP list: 10.0.2.19
 
 Фрагмент лога Fail2Ban:
 
