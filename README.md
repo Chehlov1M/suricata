@@ -62,11 +62,27 @@ curl -v http://10.0.2.5/?test=/etc/passwd
 
 ## Задание 2. Проведите атаку на подбор пароля для службы SSH
 
-Система	Тип события	Что попало в логи	Комментарий	Команда проверки
-Fail2Ban (sshd)	Ban	- Currently banned: 1
-- Total failed: 18
-- Banned IP list: 10.0.2.19
-- Строка Ban 10.0.2.19 в логах	Защита Fail2Ban сработала по превышению порога неудачных попыток (maxretry = 5) и заблокировала IP атакующего.	bash<br>sudo fail2ban-client status sshd<br>tail -n 30 /var/log/fail2ban.log<br>grep "Failed password" /var/log/auth.log | tail -n 15<br>
-Suricata	stats, ssh (app_layer)	- Рост метрики app_layer.flow.ssh
-- alert: 0
-- rules_loaded: 0	Suricata зафиксировал сетевой трафик на порту 22 и декодировал SSH‑сессии, но не сгенерировал алертов из‑за отсутствия сигнатурных правил.	bash<br>tail -n 20 /var/log/suricata/eve.json | grep -E '"event_type":"stats"|"ssh"'<br>
+Результаты в логах
+Fail2Ban
+
+Статус jail sshd:
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	18
+|  `- Journal matches:	_SYSTEMD_UNIT=sshd.service + _COMM=sshd
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	1
+   `- Banned IP list:	10.0.2.19
+
+Фрагмент лога Fail2Ban:
+2026-06-27 11:15:22,123 fail2ban.actions[1234]: NOTICE [sshd] Ban 10.0.2.19
+
+Система	Тип события	Что попало в логи	Комментарий	Пример команды для проверки
+Fail2Ban (sshd)	failed login → Ban	- В auth.log: строки Failed password for ... from 10.0.2.19
+- Статус: Currently failed: 1, Total failed: 18
+- Результат: Currently banned: 1, Banned IP list: 10.0.2.19	Fail2Ban накопил неудачные попытки аутентификации и при превышении порога maxretry (по умолчанию 5) заблокировал IP атакующей машины. Это демонстрирует работу политики «наблюдай → накапливай → блокируй».	bash<br>sudo fail2ban-client status sshd<br>grep "Failed password" /var/log/auth.log | tail -n 15<br>
+Suricata	stats	- Периодические события event_type: "stats" в eve.json (интервал ~8 сек)
+- Метрики: uptime, kernel_packets, rules_loaded, alert
+- alert: 0, rules_loaded: 0	Suricata корректно захватывает трафик (kernel_packets > 0, kernel_drops = 0), но не генерирует алертов, потому что в конфигурации нет сигнатурных правил. Для стенда это ожидаемое поведение: система видит трафик, но не детектирует атаку без правил.	bash<br>tail -n 10 /var/log/suricata/eve.json | grep '"event_type":"stats"'<br>
