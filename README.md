@@ -86,54 +86,19 @@ Fail2Ban (sshd)
 
     2026-06-27 11:15:22,123 fail2ban.actions[1234]: NOTICE [sshd] Ban 10.0.2.19
 
-```html
-<table style="border-collapse: collapse; width: 100%;">
-  <thead>
-    <tr>
-      <th style="border: 1px dashed #333; padding: 8px; text-align: left;">Система</th>
-      <th style="border: 1px dashed #333; padding: 8px; text-align: left;">Тип события</th>
-      <th style="border: 1px dashed #333; padding: 8px; text-align: left;">Что попало в логи</th>
-      <th style="border: 1px dashed #333; padding: 8px; text-align: left;">Комментарий</th>
-      <th style="border: 1px dashed #333; padding: 8px; text-align: left;">Пример команды для проверки</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="border: 1px dashed #333; padding: 8px;">**Fail2Ban** (`sshd`)</td>
-      <td style="border: 1px dashed #333; padding: 8px;">`failed login` → `Ban`</td>
-      <td style="border: 1px dashed #333; padding: 8px;">
-        - В `/var/log/auth.log`: строки <code>Failed password for ... from 10.0.2.19</code><br><br>
-        - Статус фильтра:<br>
-          • <code>Currently failed: 1</code><br>
-          • <code>Total failed: 18</code><br><br>
-        - Результат действий:<br>
-          • <code>Currently banned: 1</code><br>
-          • <code>Banned IP list: 10.0.2.19</code>
-      </td>
-      <td style="border: 1px dashed #333; padding: 8px;">Fail2Ban накопил неудачные попытки аутентификации и при превышении порога <code>maxretry</code> заблокировал IP атакующей машины. Политика: «наблюдай → накапливай → блокируй».</td>
-      <td style="border: 1px dashed #333; padding: 8px;">
-        <pre><code>sudo fail2ban-client status sshd
-grep "Failed password" /var/log/auth.log | tail -n 15</code></pre>
-      </td>
-    </tr>
-    <tr>
-      <td style="border: 1px dashed #333; padding: 8px;">**Suricata**</td>
-      <td style="border: 1px dashed #333; padding: 8px;">`stats`</td>
-      <td style="border: 1px dashed #333; padding: 8px;">
-        - Периодические события <code>event_type: "stats"</code> в `/var/log/suricata/eve.json` (интервал ~8 сек)<br><br>
-        - Метрики:<br>
-          • <code>uptime</code><br>
-          • <code>kernel_packets</code><br>
-          • <code>rules_loaded</code><br>
-          • <code>alert</code><br><br>
-        - Ключевые значения:<br>
-          • <code>alert: 0</code><br>
-          • <code>rules_loaded: 0</code>
-      </td>
-      <td style="border: 1px dashed #333; padding: 8px;">Suricata корректно захватывает трафик (<code>kernel_packets</code> > 0, <code>kernel_drops</code> = 0), но не генерирует алертов из‑за отсутствия сигнатурных правил. Без правил система видит трафик, но не классифицирует его как атаку.</td>
-      <td style="border: 1px dashed #333; padding: 8px;">
-        <pre><code>tail -n 10 /var/log/suricata/eve.json | grep '"event_type":"stats"'</code></pre>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+### Fail2Ban (`sshd`)
+- **Тип события:** `failed login` → `Ban`
+- **Что попало в логи:**
+  - В `/var/log/auth.log`: строки `Failed password for ... from 10.0.2.19`
+  - Статус фильтра:
+    - `Currently failed: 1`
+    - `Total failed: 18`
+  - Результат действий:
+    - `Currently banned: 1`
+    - `Banned IP list: 10.0.2.19`
+- **Комментарий:** Fail2Ban накопил неудачные попытки аутентификации и при превышении порога `maxretry` заблокировал IP атакующей машины. Политика: «наблюдай → накапливай → блокируй».
+- **Пример команды для проверки:**
+  ```bash
+  sudo fail2ban-client status sshd
+  grep "Failed password" /var/log/auth.log | tail -n 15
